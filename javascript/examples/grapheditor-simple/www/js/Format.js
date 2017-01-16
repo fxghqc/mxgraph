@@ -4715,12 +4715,20 @@ DiagramFormatPanel.prototype.addPaperSize = function(div)
 					if (graph.pageFormat.width == f.format.width && graph.pageFormat.height == f.format.height)
 					{
 						paperSizeSelect.value = f.key;
-						portraitCheckBox.setAttribute('checked', 'checked');
-						portraitCheckBox.defaultChecked = true;
-						portraitCheckBox.checked = true;
-						landscapeCheckBox.removeAttribute('checked');
-						landscapeCheckBox.defaultChecked = false;
-						landscapeCheckBox.checked = false;
+						// portraitCheckBox.setAttribute('checked', 'checked');
+						// portraitCheckBox.defaultChecked = true;
+						// portraitCheckBox.checked = true;
+						// landscapeCheckBox.removeAttribute('checked');
+						// landscapeCheckBox.defaultChecked = false;
+						// landscapeCheckBox.checked = false;
+
+            // default paper layout: landscape
+            portraitCheckBox.removeAttribute('checked');
+            portraitCheckBox.defaultChecked = false;
+            portraitCheckBox.checked = false;
+            landscapeCheckBox.setAttribute('checked', 'checked');
+            landscapeCheckBox.defaultChecked = true;
+            landscapeCheckBox.checked = true;
 						detected = true;
 					}
 					else if (graph.pageFormat.width == f.format.height && graph.pageFormat.height == f.format.width)
@@ -4743,8 +4751,17 @@ DiagramFormatPanel.prototype.addPaperSize = function(div)
 				widthInput.value = graph.pageFormat.width;
 				heightInput.value = graph.pageFormat.height;
 				paperSizeOption.setAttribute('selected', 'selected');
-				portraitCheckBox.setAttribute('checked', 'checked');
-				portraitCheckBox.defaultChecked = true;
+				// portraitCheckBox.setAttribute('checked', 'checked');
+				// portraitCheckBox.defaultChecked = true;
+
+        // default paper layout: landscape
+        portraitCheckBox.removeAttribute('checked');
+        portraitCheckBox.defaultChecked = false;
+        portraitCheckBox.checked = false;
+        landscapeCheckBox.setAttribute('checked', 'checked');
+        landscapeCheckBox.defaultChecked = true;
+        landscapeCheckBox.checked = true;
+
 				formatDiv.style.display = 'none';
 				customDiv.style.display = '';
 			}
