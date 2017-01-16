@@ -1634,6 +1634,20 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 		}),
 		this.createVertexTemplateEntry('swimlane;html=1;horizontal=0;startSize=20;', 320, 240, 'Pool', 'Pool', null, null, 'bpmn pool'),
 		this.createVertexTemplateEntry('swimlane;html=1;horizontal=0;swimlaneFillColor=white;swimlaneLine=0;', 300, 120, 'Lane', 'Lane', null, null, 'bpmn lane'),
+    this.addEntry("container swimlane pool vertical", function() {
+      var poolCell = new mxCell("Pool",new mxGeometry(0,0,360,480),"swimlane;html=1;childLayout=stackLayout;startSize=20;");
+      poolCell.vertex = !0;
+      var lineCell = new mxCell("Lane 1",new mxGeometry(0,20,120,460),"swimlane;html=1;startSize=20;");
+      lineCell.vertex = !0;
+      poolCell.insert(lineCell);
+      lineCell = new mxCell("Lane 2",new mxGeometry(120,20,120,460),"swimlane;html=1;startSize=20;");
+      lineCell.vertex = !0;
+      poolCell.insert(lineCell);
+      lineCell = new mxCell("Lane 3",new mxGeometry(240,20,120,460),"swimlane;html=1;startSize=20;");
+      lineCell.vertex = !0;
+      poolCell.insert(lineCell);
+      return sb.createVertexTemplateFromCells([poolCell], poolCell.geometry.width, poolCell.geometry.height, "Vertical Pool 1", !0);
+    }),
 	 	this.createVertexTemplateEntry('shape=hexagon;html=1;whiteSpace=wrap;perimeter=hexagonPerimeter;', 60, 50, '', 'Conversation', null, null, 'bpmn conversation'),
 	 	this.createVertexTemplateEntry('shape=hexagon;html=1;whiteSpace=wrap;perimeter=hexagonPerimeter;strokeWidth=4', 60, 50, '', 'Call Conversation', null, null, 'bpmn call conversation'),
 		this.addEntry('bpmn subconversation sub conversation sub-conversation', function()
