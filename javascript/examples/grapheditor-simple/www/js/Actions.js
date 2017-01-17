@@ -30,20 +30,20 @@ Actions.prototype.init = function()
 	{
 		window.openNew = true;
 		window.openKey = 'open';
-		
+
 		ui.openFile();
 	});
 	this.addAction('import...', function()
 	{
 		window.openNew = false;
 		window.openKey = 'import';
-		
+
 		// Closes dialog after open
 		window.openFile = new OpenFile(mxUtils.bind(this, function()
 		{
 			ui.hideDialog();
 		}));
-		
+
 		window.openFile.setConsumer(mxUtils.bind(this, function(xml, filename)
 		{
 			try
@@ -52,7 +52,7 @@ Actions.prototype.init = function()
 				var model = new mxGraphModel();
 				var codec = new mxCodec(doc);
 				codec.decode(doc.documentElement, model);
-				
+
 				var children = model.getChildren(model.getChildAt(model.getRoot(), 0));
 				editor.graph.setSelectionCells(editor.graph.importCells(children));
 			}
@@ -80,7 +80,7 @@ Actions.prototype.init = function()
 	this.addAction('pageSetup...', function() { ui.showDialog(new PageSetupDialog(ui).container, 320, 220, true, true); }).isEnabled = isGraphEnabled;
 	this.addAction('print...', function() { ui.showDialog(new PrintDialog(ui).container, 300, 180, true, true); }, null, 'sprite-print', 'Ctrl+P');
 	this.addAction('preview', function() { mxUtils.show(graph, null, 10, 10); });
-	
+
 	// Edit actions
 	this.addAction('undo', function() { ui.undo(); }, null, 'sprite-undo', 'Ctrl+Z');
 	this.addAction('redo', function() { ui.redo(); }, null, 'sprite-redo', (!mxClient.IS_WIN) ? 'Ctrl+Shift+Z' : 'Ctrl+Y');
@@ -101,21 +101,21 @@ Actions.prototype.init = function()
 			try
 			{
 				var cells = mxClipboard.paste(graph);
-				
+
 				if (cells != null)
 				{
 					var bb = graph.getBoundingBoxFromGeometry(cells);
-					
+
 					if (bb != null)
 					{
 						var t = graph.view.translate;
 						var s = graph.view.scale;
 						var dx = t.x;
 						var dy = t.y;
-						
+
 						var x = Math.round(graph.snap(graph.popupMenuHandler.triggerX / s - dx));
 						var y = Math.round(graph.snap(graph.popupMenuHandler.triggerY / s - dy));
-						
+
 						graph.cellsMoved(cells, x - bb.x, y - bb.y);
 					}
 				}
@@ -126,23 +126,23 @@ Actions.prototype.init = function()
 			}
 		}
 	});
-	
+
 	function deleteCells(includeEdges)
 	{
 		// Cancels interactive operations
 		graph.escape();
 		var cells = graph.getDeletableCells(graph.getSelectionCells());
-		
+
 		if (cells != null && cells.length > 0)
 		{
 			var parents = graph.model.getParents(cells);
 			graph.removeCells(cells, includeEdges);
-			
+
 			// Selects parents for easier editing of groups
 			if (parents != null)
 			{
 				var select = [];
-				
+
 				for (var i = 0; i < parents.length; i++)
 				{
 					if (graph.model.isVertex(parents[i]) || graph.model.isEdge(parents[i]))
@@ -150,12 +150,12 @@ Actions.prototype.init = function()
 						select.push(parents[i]);
 					}
 				}
-				
+
 				graph.setSelectionCells(select);
 			}
 		}
 	};
-	
+
 	this.addAction('delete', function()
 	{
 		deleteCells(false);
@@ -235,7 +235,7 @@ Actions.prototype.init = function()
 	this.addAction('editData...', function()
 	{
 		var cell = graph.getSelectionCell() || graph.getModel().getRoot();
-		
+
 		if (cell != null)
 		{
 			var dlg = new EditDataDialog(ui, cell);
@@ -246,22 +246,22 @@ Actions.prototype.init = function()
 	this.addAction('editTooltip...', function()
 	{
 		var graph = ui.editor.graph;
-		
+
 		if (graph.isEnabled() && !graph.isSelectionEmpty())
 		{
 			var cell = graph.getSelectionCell();
 			var tooltip = '';
-			
+
 			if (mxUtils.isNode(cell.value))
 			{
 				var tmp = cell.value.getAttribute('tooltip');
-				
+
 				if (tmp != null)
 				{
 					tooltip = tmp;
 				}
 			}
-			
+
 	    	var dlg = new TextareaDialog(ui, mxResources.get('editTooltip') + ':', tooltip, function(newValue)
 			{
 				graph.setTooltipForCell(cell, newValue);
@@ -273,7 +273,7 @@ Actions.prototype.init = function()
 	this.addAction('openLink', function()
 	{
 		var link = graph.getLinkForCell(graph.getSelectionCell());
-		
+
 		if (link != null)
 		{
 			window.open(link);
@@ -282,12 +282,12 @@ Actions.prototype.init = function()
 	this.addAction('editLink...', function()
 	{
 		var graph = ui.editor.graph;
-		
+
 		if (graph.isEnabled() && !graph.isSelectionEmpty())
 		{
 			var cell = graph.getSelectionCell();
 			var value = graph.getLinkForCell(cell) || '';
-			
+
 			ui.showLinkDialog(value, mxResources.get('apply'), function(link)
 			{
 				link = mxUtils.trim(link);
@@ -302,24 +302,24 @@ Actions.prototype.init = function()
 			var dlg = new LinkDialog(ui, '', mxResources.get('insert'), function(link, docs)
 			{
 				link = mxUtils.trim(link);
-				
+
 				if (link.length > 0)
 				{
 					var title = link.substring(link.lastIndexOf('/') + 1);
 					var icon = null;
-					
+
 					if (docs != null && docs.length > 0)
 					{
 						icon = docs[0].iconUrl;
 						title = docs[0].name || docs[0].type;
 						title = title.charAt(0).toUpperCase() + title.substring(1);
-						
+
 						if (title.length > 30)
 						{
 							title = title.substring(0, 30) + '...';
 						}
 					}
-					
+
 					var pt = graph.getInsertPoint();
             		var linkCell = new mxCell(title, new mxGeometry(pt.x, pt.y, 100, 40),
             	    	'fontColor=#0000EE;fontStyle=4;rounded=1;overflow=hidden;' + ((icon != null) ?
@@ -332,7 +332,7 @@ Actions.prototype.init = function()
             	    graph.setSelectionCell(graph.addCell(linkCell));
 				}
 			});
-			
+
 			ui.showDialog(dlg.container, 420, 90, true, true);
 			dlg.init();
 		}
@@ -340,21 +340,21 @@ Actions.prototype.init = function()
 	this.addAction('link...', mxUtils.bind(this, function()
 	{
 		var graph = ui.editor.graph;
-		
+
 		if (graph.isEnabled())
 		{
 			if (graph.cellEditor.isContentEditing())
 			{
 				var link = graph.getParentByName(graph.getSelectedElement(), 'A', graph.cellEditor.textarea);
 				var oldValue = '';
-				
+
 				if (link != null)
 				{
 					oldValue = link.getAttribute('href') || '';
 				}
-				
+
 				var selState = graph.cellEditor.saveSelection();
-				
+
 				ui.showLinkDialog(oldValue, mxResources.get('apply'), mxUtils.bind(this, function(value)
 				{
 		    		graph.cellEditor.restoreSelection(selState);
@@ -370,18 +370,18 @@ Actions.prototype.init = function()
 							// To find the new link, we create a list of all existing links first
 							var tmp = graph.cellEditor.textarea.getElementsByTagName('a');
 							var oldLinks = [];
-							
+
 							for (var i = 0; i < tmp.length; i++)
 							{
 								oldLinks.push(tmp[i]);
 							}
-	
+
 							// LATER: Fix inserting link/image in IE8/quirks after focus lost
 							document.execCommand('createlink', false, mxUtils.trim(value));
-	
+
 							// Adds target="_blank" for the new link
 							var newLinks = graph.cellEditor.textarea.getElementsByTagName('a');
-							
+
 							if (newLinks.length == oldLinks.length + 1)
 							{
 								// Inverse order in favor of appended links
@@ -411,7 +411,7 @@ Actions.prototype.init = function()
 	this.addAction('autosize', function()
 	{
 		var cells = graph.getSelectionCells();
-		
+
 		if (cells != null)
 		{
 			graph.getModel().beginUpdate();
@@ -420,7 +420,7 @@ Actions.prototype.init = function()
 				for (var i = 0; i < cells.length; i++)
 				{
 					var cell = cells[i];
-					
+
 					if (graph.getModel().getChildCount(cell))
 					{
 						graph.updateGroupBounds([cell], 20);
@@ -453,19 +453,19 @@ Actions.prototype.init = function()
 	this.addAction('formattedText', function()
 	{
     	var state = graph.getView().getState(graph.getSelectionCell());
-    	
+
     	if (state != null)
     	{
 	    	var value = '1';
 	    	graph.stopEditing();
-			
+
 			graph.getModel().beginUpdate();
 			try
 			{
 		    	if (state.style['html'] == '1')
 		    	{
 		    		value = null;
-		    		
+
 					// Removes newlines from HTML and converts breaks to newlines
 					// to match the HTML output in plain text
 					if (mxUtils.getValue(state.style, 'nl2Br', '1') != '0')
@@ -481,15 +481,15 @@ Actions.prototype.init = function()
 					// Converts newlines in plain text to breaks in HTML
 					// to match the plain text output
 		    		var label = graph.convertValueToString(state.cell);
-		    		
+
 		    		if (mxUtils.getValue(state.style, 'nl2Br', '1') != '0')
 					{
 		    			label = label.replace(/\n/g, '<br/>');
 					}
-		    		
+
 		    		graph.cellLabelChanged(state.cell, graph.sanitizeHtml(label));
 		    	}
-		
+
 		       	graph.setCellStyles('html', value);
 				ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['html'],
 						'values', [(value != null) ? value : '0'], 'cells',
@@ -505,9 +505,9 @@ Actions.prototype.init = function()
 	{
     	var state = graph.getView().getState(graph.getSelectionCell());
     	var value = 'wrap';
-    	
+
 		graph.stopEditing();
-    	
+
     	if (state != null && state.style[mxConstants.STYLE_WHITE_SPACE] == 'wrap')
     	{
     		value = null;
@@ -519,7 +519,7 @@ Actions.prototype.init = function()
 	{
 		var value = '0';
     	var state = graph.getView().getState(graph.getSelectionCell());
-    	
+
     	if (state != null)
     	{
     		value = state.style[mxConstants.STYLE_ROTATION] || value;
@@ -532,7 +532,7 @@ Actions.prototype.init = function()
 				graph.setCellStyles(mxConstants.STYLE_ROTATION, newValue);
 			}
 		}, mxResources.get('enterValue') + ' (' + mxResources.get('rotation') + ' 0-360)');
-		
+
 		ui.showDialog(dlg.container, 300, 80, true, true);
 		dlg.init();
 	});
@@ -551,14 +551,14 @@ Actions.prototype.init = function()
 		{
 			this.get('pageView').funct();
 		}
-		
+
 		var fmt = graph.pageFormat;
 		var ps = graph.pageScale;
 		var cw = graph.container.clientWidth - 10;
 		var ch = graph.container.clientHeight - 10;
 		var scale = Math.floor(20 * Math.min(cw / fmt.width / ps, ch / fmt.height / ps)) / 20;
 		graph.zoomTo(scale);
-		
+
 		if (mxUtils.hasScrollbars(graph.container))
 		{
 			var pad = graph.getPagePadding();
@@ -572,15 +572,15 @@ Actions.prototype.init = function()
 		{
 			this.get('pageView').funct();
 		}
-		
+
 		var fmt = graph.pageFormat;
 		var ps = graph.pageScale;
 		var cw = graph.container.clientWidth - 10;
 		var ch = graph.container.clientHeight - 10;
-		
+
 		var scale = Math.floor(20 * Math.min(cw / (2 * fmt.width) / ps, ch / fmt.height / ps)) / 20;
 		graph.zoomTo(scale);
-		
+
 		if (mxUtils.hasScrollbars(graph.container))
 		{
 			var pad = graph.getPagePadding();
@@ -594,14 +594,14 @@ Actions.prototype.init = function()
 		{
 			this.get('pageView').funct();
 		}
-		
+
 		var fmt = graph.pageFormat;
 		var ps = graph.pageScale;
 		var cw = graph.container.clientWidth - 10;
 
 		var scale = Math.floor(20 * cw / fmt.width / ps) / 20;
 		graph.zoomTo(scale);
-		
+
 		if (mxUtils.hasScrollbars(graph.container))
 		{
 			var pad = graph.getPagePadding();
@@ -614,7 +614,7 @@ Actions.prototype.init = function()
 		var dlg = new FilenameDialog(this.editorUi, parseInt(graph.getView().getScale() * 100), mxResources.get('apply'), mxUtils.bind(this, function(newValue)
 		{
 			var val = parseInt(newValue);
-			
+
 			if (!isNaN(val) && val > 0)
 			{
 				graph.zoomTo(val / 100);
@@ -628,7 +628,7 @@ Actions.prototype.init = function()
 		var dlg = new FilenameDialog(this.editorUi, parseInt(graph.pageScale * 100), mxResources.get('apply'), mxUtils.bind(this, function(newValue)
 		{
 			var val = parseInt(newValue);
-			
+
 			if (!isNaN(val) && val > 0)
 			{
 				ui.setPageScale(val / 100);
@@ -648,7 +648,7 @@ Actions.prototype.init = function()
 	action.setToggleAction(true);
 	action.setSelectedCallback(function() { return graph.isGridEnabled(); });
 	action.setEnabled(false);
-	
+
 	action = this.addAction('guides', function()
 	{
 		graph.graphHandler.guidesEnabled = !graph.graphHandler.guidesEnabled;
@@ -657,14 +657,14 @@ Actions.prototype.init = function()
 	action.setToggleAction(true);
 	action.setSelectedCallback(function() { return graph.graphHandler.guidesEnabled; });
 	action.setEnabled(false);
-	
+
 	action = this.addAction('tooltips', function()
 	{
 		graph.tooltipHandler.setEnabled(!graph.tooltipHandler.isEnabled());
 	});
 	action.setToggleAction(true);
 	action.setSelectedCallback(function() { return graph.tooltipHandler.isEnabled(); });
-	
+
 	action = this.addAction('collapseExpand', function()
 	{
 		ui.setFoldingEnabled(!graph.foldingEnabled);
@@ -683,15 +683,15 @@ Actions.prototype.init = function()
 		var hasScrollbars = mxUtils.hasScrollbars(graph.container);
 		var tx = 0;
 		var ty = 0;
-		
+
 		if (hasScrollbars)
 		{
 			tx = graph.view.translate.x * graph.view.scale - graph.container.scrollLeft;
 			ty = graph.view.translate.y * graph.view.scale - graph.container.scrollTop;
 		}
-		
+
 		graph.pageVisible = !graph.pageVisible;
-		graph.pageBreaksVisible = graph.pageVisible; 
+		graph.pageBreaksVisible = graph.pageVisible;
 		graph.preferPageSize = graph.pageBreaksVisible;
 		graph.view.validateBackground();
 
@@ -702,16 +702,16 @@ Actions.prototype.init = function()
 			graph.clearSelection();
 			graph.setSelectionCells(cells);
 		}
-		
+
 		// Calls updatePageBreaks
 		graph.sizeDidChange();
-		
+
 		if (hasScrollbars)
 		{
 			graph.container.scrollLeft = graph.view.translate.x * graph.view.scale - tx;
 			graph.container.scrollTop = graph.view.translate.y * graph.view.scale - ty;
 		}
-		
+
 		ui.fireEvent(new mxEventObject('pageViewChanged'));
 	}));
 	action.setToggleAction(true);
@@ -753,24 +753,24 @@ Actions.prototype.init = function()
 	action.setSelectedCallback(function() { return ui.editor.autosave; });
 	action.isEnabled = isGraphEnabled;
 	action.visible = false;
-	
+
 	// Help actions
 	this.addAction('help', function()
 	{
 		var ext = '';
-		
+
 		if (mxResources.isLanguageSupported(mxClient.language))
 		{
 			ext = '_' + mxClient.language;
 		}
-		
+
 		window.open(RESOURCES_PATH + '/help' + ext + '.html');
 	});
 	this.put('about', new Action(mxResources.get('about') + ' Graph Editor...', function()
 	{
 		ui.showDialog(new AboutDialog(ui).container, 320, 280, true, true);
 	}, null, null, 'F1'));
-	
+
 	// Font style actions
 	var toggleFontStyle = mxUtils.bind(this, function(key, style, fn, shortcut)
 	{
@@ -787,11 +787,11 @@ Actions.prototype.init = function()
 			}
 		}, null, null, shortcut);
 	});
-	
+
 	toggleFontStyle('bold', mxConstants.FONT_BOLD, function() { document.execCommand('bold', false, null); }, 'Ctrl+B');
 	toggleFontStyle('italic', mxConstants.FONT_ITALIC, function() { document.execCommand('italic', false, null); }, 'Ctrl+I');
 	toggleFontStyle('underline', mxConstants.FONT_UNDERLINE, function() { document.execCommand('underline', false, null); }, 'Ctrl+U');
-	
+
 	// Color actions
 	this.addAction('fontColor...', function() { ui.menus.pickColor(mxConstants.STYLE_FONTCOLOR, 'forecolor', '000000'); });
 	this.addAction('strokeColor...', function() { ui.menus.pickColor(mxConstants.STYLE_STROKECOLOR); });
@@ -799,10 +799,14 @@ Actions.prototype.init = function()
 	this.addAction('gradientColor...', function() { ui.menus.pickColor(mxConstants.STYLE_GRADIENTCOLOR); });
 	this.addAction('backgroundColor...', function() { ui.menus.pickColor(mxConstants.STYLE_LABEL_BACKGROUNDCOLOR, 'backcolor'); });
 	this.addAction('borderColor...', function() { ui.menus.pickColor(mxConstants.STYLE_LABEL_BORDERCOLOR); });
-	
+
 	// Format actions
 	this.addAction('vertical', function() { ui.menus.toggleStyle(mxConstants.STYLE_HORIZONTAL, true); });
 	this.addAction('shadow', function() { ui.menus.toggleStyle(mxConstants.STYLE_SHADOW); });
+	this.addAction('tag', function(event) {
+		console.log(event);
+    console.log(ui);
+	});
 	this.addAction('solid', function()
 	{
 		graph.getModel().beginUpdate();
@@ -889,7 +893,7 @@ Actions.prototype.init = function()
 	    		var state = graph.view.getState(cells[0]);
 	    		var style = (state != null) ? state.style : graph.getCellStyle(cells[0]);
 	    		var value = (mxUtils.getValue(style, mxConstants.STYLE_ROUNDED, '0') == '1') ? '0' : '1';
-	    		
+
 				graph.setCellStyles(mxConstants.STYLE_ROUNDED, value);
 				graph.setCellStyles(mxConstants.STYLE_CURVED, null);
 				ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_ROUNDED, mxConstants.STYLE_CURVED],
@@ -920,12 +924,12 @@ Actions.prototype.init = function()
 	{
 		var state = graph.view.getState(graph.getSelectionCell());
 		var value = '1';
-		
+
 		if (state != null && graph.getFoldingImage(state) != null)
 		{
-			value = '0';	
+			value = '0';
 		}
-		
+
 		graph.setCellStyles('collapsible', value);
 		ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['collapsible'],
 				'values', [value], 'cells', graph.getSelectionCells()));
@@ -933,11 +937,11 @@ Actions.prototype.init = function()
 	this.addAction('editStyle...', mxUtils.bind(this, function()
 	{
 		var cells = graph.getSelectionCells();
-		
+
 		if (cells != null && cells.length > 0)
 		{
 			var model = graph.getModel();
-			
+
 	    	var dlg = new TextareaDialog(this.editorUi, mxResources.get('editStyle') + ':',
 	    			model.getStyle(cells[0]) || '', function(newValue)
 			{
@@ -967,33 +971,33 @@ Actions.prototype.init = function()
 	this.addAction('addWaypoint', function()
 	{
 		var cell = graph.getSelectionCell();
-		
+
 		if (cell != null && graph.getModel().isEdge(cell))
 		{
 			var handler = editor.graph.selectionCellsHandler.getHandler(cell);
-			
+
 			if (handler instanceof mxEdgeHandler)
 			{
 				var t = graph.view.translate;
 				var s = graph.view.scale;
 				var dx = t.x;
 				var dy = t.y;
-				
+
 				var parent = graph.getModel().getParent(cell);
 				var pgeo = graph.getCellGeometry(parent);
-				
+
 				while (graph.getModel().isVertex(parent) && pgeo != null)
 				{
 					dx += pgeo.x;
 					dy += pgeo.y;
-					
+
 					parent = graph.getModel().getParent(parent);
 					pgeo = graph.getCellGeometry(parent);
 				}
-				
+
 				var x = Math.round(graph.snap(graph.popupMenuHandler.triggerX / s - dx));
 				var y = Math.round(graph.snap(graph.popupMenuHandler.triggerY / s - dy));
-				
+
 				handler.addPointAt(handler.state, x, y);
 			}
 		}
@@ -1002,7 +1006,7 @@ Actions.prototype.init = function()
 	{
 		// TODO: Action should run with "this" set to action
 		var rmWaypointAction = ui.actions.get('removeWaypoint');
-		
+
 		if (rmWaypointAction.handler != null)
 		{
 			// NOTE: Popupevent handled and action updated in Menus.createPopupMenu
@@ -1012,7 +1016,7 @@ Actions.prototype.init = function()
 	this.addAction('clearWaypoints', function()
 	{
 		var cells = graph.getSelectionCells();
-		
+
 		if (cells != null)
 		{
 			graph.getModel().beginUpdate();
@@ -1021,11 +1025,11 @@ Actions.prototype.init = function()
 				for (var i = 0; i < cells.length; i++)
 				{
 					var cell = cells[i];
-					
+
 					if (graph.getModel().isEdge(cell))
 					{
 						var geo = graph.getCellGeometry(cell);
-			
+
 						if (geo != null)
 						{
 							geo = geo.clone();
@@ -1062,14 +1066,14 @@ Actions.prototype.init = function()
 			var title = mxResources.get('image') + ' (' + mxResources.get('url') + '):';
 	    	var state = graph.getView().getState(graph.getSelectionCell());
 	    	var value = '';
-	    	
+
 	    	if (state != null)
 	    	{
 	    		value = state.style[mxConstants.STYLE_IMAGE] || value;
 	    	}
-	    	
+
 	    	var selectionState = graph.cellEditor.saveSelection();
-	    	
+
 	    	ui.showImageDialog(title, value, function(newValue, w, h)
 			{
 	    		// Inserts image into HTML text
@@ -1085,7 +1089,7 @@ Actions.prototype.init = function()
 					if (newValue != null)
 					{
 						var select = null;
-						
+
 						graph.getModel().beginUpdate();
 			        	try
 			        	{
@@ -1097,25 +1101,25 @@ Actions.prototype.init = function()
 			    						'shape=image;verticalLabelPosition=bottom;verticalAlign=top;')];
 			    				select = cells;
 			    			}
-			    			
+
 			        		graph.setCellStyles(mxConstants.STYLE_IMAGE, newValue, cells);
-			        		
+
 			        		// Sets shape only if not already shape with image (label or image)
 			        		var state = graph.view.getState(cells[0]);
 			        		var style = (state != null) ? state.style : graph.getCellStyle(cells[0]);
-			        		
+
 			        		if (style[mxConstants.STYLE_SHAPE] != 'image' && style[mxConstants.STYLE_SHAPE] != 'label')
 			        		{
 			        			graph.setCellStyles(mxConstants.STYLE_SHAPE, 'image', cells);
 			        		}
-				        	
+
 				        	if (graph.getSelectionCount() == 1)
 				        	{
 					        	if (w != null && h != null)
 					        	{
 					        		var cell = cells[0];
 					        		var geo = graph.getModel().getGeometry(cell);
-					        		
+
 					        		if (geo != null)
 					        		{
 					        			geo = geo.clone();
@@ -1130,7 +1134,7 @@ Actions.prototype.init = function()
 			        	{
 			        		graph.getModel().endUpdate();
 			        	}
-			        	
+
 			        	if (select != null)
 			        	{
 			        		graph.setSelectionCells(select);
@@ -1170,7 +1174,7 @@ Actions.prototype.init = function()
 		{
 			this.layersWindow.window.setVisible(!this.layersWindow.window.isVisible());
 		}
-		
+
 		//ui.fireEvent(new mxEventObject('layers'));
 	}), null, null, 'Ctrl+Shift+L');
 	action.setToggleAction(true);
@@ -1202,10 +1206,10 @@ Actions.prototype.init = function()
 		{
 			this.outlineWindow.window.setVisible(!this.outlineWindow.window.isVisible());
 		}
-		
+
 		ui.fireEvent(new mxEventObject('outline'));
 	}), null, null, 'Ctrl+Shift+O');
-	
+
 	action.setToggleAction(true);
 	action.setSelectedCallback(mxUtils.bind(this, function() { return this.outlineWindow != null && this.outlineWindow.window.isVisible(); }));
 };
@@ -1216,7 +1220,7 @@ Actions.prototype.init = function()
 Actions.prototype.addAction = function(key, funct, enabled, iconCls, shortcut)
 {
 	var title;
-	
+
 	if (key.substring(key.length - 3) == '...')
 	{
 		key = key.substring(0, key.length - 3);
@@ -1226,7 +1230,7 @@ Actions.prototype.addAction = function(key, funct, enabled, iconCls, shortcut)
 	{
 		title = mxResources.get(key);
 	}
-	
+
 	return this.put(key, new Action(title, funct, enabled, iconCls, shortcut));
 };
 
@@ -1236,7 +1240,7 @@ Actions.prototype.addAction = function(key, funct, enabled, iconCls, shortcut)
 Actions.prototype.put = function(name, action)
 {
 	this.actions[name] = action;
-	
+
 	return action;
 };
 
