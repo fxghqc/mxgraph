@@ -2455,7 +2455,7 @@ EditorUi.prototype.updateActionStates = function()
 	var actions = ['cut', 'copy', 'bold', 'italic', 'underline', 'delete', 'duplicate',
 	               'editStyle', 'editTooltip', 'editLink', 'backgroundColor', 'borderColor',
 	               'toFront', 'toBack', 'lockUnlock', 'solid', 'dashed',
-	               'dotted', 'fillColor', 'gradientColor', 'shadow', 'fontColor',
+	               'dotted', 'fillColor', 'gradientColor', 'shadow', 'star', 'fontColor',
 	               'formattedText', 'rounded', 'toggleRounded', 'sharp', 'strokeColor'];
 
 	for (var i = 0; i < actions.length; i++)

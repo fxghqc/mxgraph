@@ -122,7 +122,7 @@ Toolbar.prototype.init = function()
 
 	if (sw >= 640)
 	{
-		this.addItems(['-', 'fillColor', 'strokeColor', 'shadow', 'tag']);
+		this.addItems(['-', 'fillColor', 'strokeColor', 'shadow', 'star']);
 	}
 
 	if (sw >= 320)
@@ -706,7 +706,11 @@ Toolbar.prototype.addItems = function(keys, c, ignoreDisabled)
 		}
 		else
 		{
-			items.push(this.addItem('geSprite-' + key.toLowerCase(), key, c, ignoreDisabled));
+      if (key.toLowerCase() === 'star') {
+        items.push(this.addItem('fa fa-star', key, c, ignoreDisabled));
+      } else {
+        items.push(this.addItem('geSprite-' + key.toLowerCase(), key, c, ignoreDisabled));
+      }
 		}
 	}
 
