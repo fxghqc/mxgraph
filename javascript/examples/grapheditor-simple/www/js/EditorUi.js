@@ -8,6 +8,7 @@ EditorUi = function(editor, container, lightbox)
 {
 	mxEventSource.call(this);
 	this.destroyFunctions = [];
+  this.stars = [];
 
 	this.editor = editor || new Editor();
 	this.container = container || document.body;
@@ -3232,6 +3233,97 @@ EditorUi.prototype.save = function(name)
 EditorUi.prototype.getGraphXml = function()
 {
   return mxUtils.getXml(this.editor.getGraphXml());
+}
+
+/**
+ * Get the current graph xml string
+ */
+EditorUi.prototype.getStars = function()
+{
+  var result = [];
+  var cells = this.editor.graph.getModel().cells;
+  var keys = Object.keys(cells);
+  var cell, key;
+  for (key in keys) {
+    cell = cells[key]
+    if (cell && cell.overlays.findIndex(function(overlay) {
+      return overlay.tooltip === '关键因素';
+    }) >= 0) {
+      result.push({id: cell.id, name: cell.value});
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Get the current graph xml string
+ */
+EditorUi.prototype.reStarCells = function(stars)
+{
+  var graph = this.editor.graph;
+  var staredKeys = stars.map(function(star) {
+    return star.id;
+  })
+  var cells = graph.getModel().cells;
+  var ownKeys = Object.keys(cells).filter(function(key) { return cells.hasOwnProperty(key); });
+  var staredCells = []
+  ownKeys.forEach(function(key) {
+    if (staredKeys.indexOf(cells[key].id) >= 0) {
+      staredCells.push(cells[key]);
+    }
+  })
+  this.starCells(staredCells);
+}
+
+/**
+ * starCells.
+ */
+EditorUi.prototype.starCells = function(cells, keep)
+{
+  var graph = this.editor.graph;
+  cells.forEach(mxUtils.bind(this, function(cell) {
+    if (cell != null)
+    {
+      var overlays = graph.getCellOverlays(cell);
+
+      if (overlays == null)
+      {
+        // Creates a new overlay with an image and a tooltip
+        var overlay = new mxCellOverlay(
+          new mxImage('images/star-128.png', 24, 24),
+          '关键因素', mxConstants.ALIGN_CENTER, mxConstants.ALIGN_TOP);
+        // offset
+        // cursor
+
+        // Installs a handler for clicks on the overlay
+        overlay.addListener(mxEvent.CLICK, function(sender, evt2)
+        {
+          mxUtils.alert('Overlay clicked');
+        });
+
+        // Sets the overlay for the cell in the graph
+        graph.addCellOverlay(cell, overlay);
+        graph.setCellStyle(cell.getStyle() + 'strokeColor=#FFC933;', [cell]);
+        if (keep) {
+          this.stars.push({id: cell.id, value: cell.value});
+        }
+      }
+      else
+      {
+        graph.removeCellOverlays(cell);
+        graph.setCellStyle(cell.getStyle().replace('strokeColor=#FFC933;', '') + '', [cell]);
+        if (keep) {
+          var cellIndex = this.stars.findIndex(function(star) {
+            return star.id = cell.id;
+          });
+          if (cellIndex >= 0) {
+            this.stars.splice(cellIndex, 1);
+          }
+        }
+      }
+    }
+  }));
 }
 
 /**

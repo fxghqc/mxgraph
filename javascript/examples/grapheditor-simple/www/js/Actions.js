@@ -805,37 +805,7 @@ Actions.prototype.init = function()
 	this.addAction('shadow', function() { ui.menus.toggleStyle(mxConstants.STYLE_SHADOW); });
 	this.addAction('star', mxUtils.bind(this, function() {
     var cells = graph.getSelectionCells();
-    cells.forEach(function(cell) {
-      if (cell != null)
-  		{
-  			var overlays = graph.getCellOverlays(cell);
-
-  			if (overlays == null)
-  			{
-  				// Creates a new overlay with an image and a tooltip
-  				var overlay = new mxCellOverlay(
-  					new mxImage('images/star-128.png', 24, 24),
-  					'关键因素', mxConstants.ALIGN_CENTER, mxConstants.ALIGN_TOP);
-          // offset
-          // cursor
-
-  				// Installs a handler for clicks on the overlay
-  				overlay.addListener(mxEvent.CLICK, function(sender, evt2)
-  				{
-  					mxUtils.alert('Overlay clicked');
-  				});
-
-  				// Sets the overlay for the cell in the graph
-  				graph.addCellOverlay(cell, overlay);
-          graph.setCellStyle(cell.getStyle() + 'strokeColor=#FFC933;', [cell])
-  			}
-  			else
-  			{
-  				graph.removeCellOverlays(cell);
-          graph.setCellStyle(cell.getStyle().replace('strokeColor=#FFC933;', '') + '', [cell]);
-  			}
-  		}
-    })
+    ui.starCells(cells, true);
 	}));
 	this.addAction('solid', function()
 	{
