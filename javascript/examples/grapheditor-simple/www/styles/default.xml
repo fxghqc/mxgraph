@@ -6,9 +6,9 @@
 		<add as="fontFamily" value="Helvetica"/>
 		<add as="align" value="center"/>
 		<add as="verticalAlign" value="middle"/>
-		<add as="fillColor" value="#ffffff"/>
-		<add as="strokeColor" value="#555555"/>
-		<add as="fontColor" value="#000000"/>
+		<add as="fillColor" value="#FEF4EC"/>
+		<add as="strokeColor" value="#706E6C"/>
+		<add as="fontColor" value="#4C4C4C"/>
 	</add>
 	<add as="defaultEdge">
 		<add as="shape" value="connector"/>

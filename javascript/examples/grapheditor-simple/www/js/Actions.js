@@ -815,7 +815,7 @@ Actions.prototype.init = function()
   				// Creates a new overlay with an image and a tooltip
   				var overlay = new mxCellOverlay(
   					new mxImage('images/star-128.png', 24, 24),
-  					'关键因素', mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP);
+  					'关键因素', mxConstants.ALIGN_CENTER, mxConstants.ALIGN_TOP);
           // offset
           // cursor
 
@@ -832,7 +832,7 @@ Actions.prototype.init = function()
   			else
   			{
   				graph.removeCellOverlays(cell);
-          graph.setCellStyle(cell.getStyle().replace('strokeColor=#FFC933;', '') + '', [cell])
+          graph.setCellStyle(cell.getStyle().replace('strokeColor=#FFC933;', '') + '', [cell]);
   			}
   		}
     })
