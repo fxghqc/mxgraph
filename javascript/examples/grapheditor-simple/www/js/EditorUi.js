@@ -2041,6 +2041,35 @@ EditorUi.prototype.open = function()
 	this.editor.fireEvent(new mxEventObject('resetGraphView'));
 };
 
+EditorUi.prototype.loadXml = function (xml, filename)
+{
+  try
+  {
+    var doc = mxUtils.parseXml(xml);
+    this.editor.setGraphXml(doc.documentElement);
+    this.editor.setModified(false);
+    this.editor.undoManager.clear();
+
+    if (filename != null)
+    {
+      this.editor.setFilename(filename);
+      this.updateDocumentTitle();
+    }
+  }
+  catch (e)
+  {
+    mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
+  }
+
+  // Fires as the last step if no file was loaded
+  this.editor.graph.view.validate();
+
+  // Required only in special cases where an initial file is opened
+  // and the minimumGraphSize changes and CSS must be updated.
+  this.editor.graph.sizeDidChange();
+  this.editor.fireEvent(new mxEventObject('resetGraphView'));
+};
+
 /**
  * Sets the current menu and element.
  */

@@ -63,16 +63,10 @@
         editorUiInit.apply(this, arguments);
         this.actions.get('export').setEnabled(false);
 
-        // Updates action states which require a backend
         if (!Editor.useLocalStorage) {
-          mxUtils.post(OPEN_URL, '', mxUtils.bind(this, function(req) {
-            var enabled = req.getStatus() != 404;
-            this.actions.get('open').setEnabled(enabled || Graph.fileSupport);
-            this.actions.get('import').setEnabled(enabled || Graph.fileSupport);
-            this.actions.get('save').setEnabled(enabled);
-            this.actions.get('saveAs').setEnabled(enabled);
-            this.actions.get('export').setEnabled(enabled);
-          }));
+          var filename = 'graph-1'
+          var xml = '<mxGraphModel dx="1030" dy="508" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;" edge="1" parent="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="2" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="10" y="120" width="120" height="60" as="geometry"/></mxCell><mxCell id="12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;" edge="1" parent="1" source="3" target="11"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="3" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="210" y="120" width="120" height="60" as="geometry"/></mxCell><mxCell id="5" value="Pool" style="swimlane;html=1;childLayout=stackLayout;startSize=20;" vertex="1" parent="1"><mxGeometry x="370" y="20" width="350" height="480" as="geometry"/></mxCell><mxCell id="6" value="Lane 1" style="swimlane;html=1;startSize=20;" vertex="1" parent="5"><mxGeometry y="20" width="170" height="460" as="geometry"/></mxCell><mxCell id="14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;" edge="1" parent="6" source="11" target="13"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="11" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="6"><mxGeometry x="25" y="80" width="120" height="60" as="geometry"/></mxCell><mxCell id="13" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="6"><mxGeometry x="25" y="220" width="120" height="60" as="geometry"/></mxCell><mxCell id="7" value="Lane 2" style="swimlane;html=1;startSize=20;" vertex="1" parent="5"><mxGeometry x="170" y="20" width="180" height="460" as="geometry"/></mxCell><mxCell id="15" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="7"><mxGeometry x="30" y="220" width="120" height="60" as="geometry"/></mxCell><mxCell id="16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;" edge="1" parent="5" source="13" target="15"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel>';
+          this.loadXml(xml, filename)
         }
       };
 
