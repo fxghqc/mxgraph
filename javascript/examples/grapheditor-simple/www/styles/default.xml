@@ -7,7 +7,7 @@
 		<add as="align" value="center"/>
 		<add as="verticalAlign" value="middle"/>
 		<add as="fillColor" value="#ffffff"/>
-		<add as="strokeColor" value="#000000"/>
+		<add as="strokeColor" value="#555555"/>
 		<add as="fontColor" value="#000000"/>
 	</add>
 	<add as="defaultEdge">
@@ -19,7 +19,7 @@
 		<add as="align" value="center"/>
 		<add as="verticalAlign" value="middle"/>
 		<add as="rounded" value="1"/>
-		<add as="strokeColor" value="#000000"/>
+		<add as="strokeColor" value="#555555"/>
 		<add as="fontColor" value="#000000"/>
 	</add>
 	<add as="text">

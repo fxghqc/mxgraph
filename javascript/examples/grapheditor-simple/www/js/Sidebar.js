@@ -881,17 +881,17 @@ Sidebar.prototype.addGeneralPalette = function(expand)
 	var sb = this;
 	var fns = [
 		// 	this.createVertexTemplateEntry('whiteSpace=wrap;html=1;', 120, 60, '', 'Rectangle', null, null, 'rect rectangle box'),
-	 	this.createVertexTemplateEntry('rounded=1;whiteSpace=wrap;html=1;strokeColor=#555555;', 96, 48, '', 'Rounded Rectangle', null, null, 'rounded rect rectangle box'),
+	 	this.createVertexTemplateEntry('rounded=1;whiteSpace=wrap;html=1;', 96, 48, '', 'Rounded Rectangle', null, null, 'rounded rect rectangle box'),
 		this.addEntry("container swimlane pool vertical", function() {
-      var poolCell = new mxCell("Pool",new mxGeometry(0,0,480,560),"swimlane;html=1;childLayout=stackLayout;startSize=30;strokeColor=#555555;");
+      var poolCell = new mxCell("Pool",new mxGeometry(0,0,480,560),"swimlane;html=1;childLayout=stackLayout;startSize=30;");
       poolCell.vertex = !0;
-      var lineCell = new mxCell("Lane 1",new mxGeometry(0,30,160,530),"swimlane;html=1;startSize=30;strokeColor=#555555;");
+      var lineCell = new mxCell("Lane 1",new mxGeometry(0,30,160,530),"swimlane;html=1;startSize=30;");
       lineCell.vertex = !0;
       poolCell.insert(lineCell);
-      lineCell = new mxCell("Lane 2",new mxGeometry(160,30,160,530),"swimlane;html=1;startSize=30;strokeColor=#555555;");
+      lineCell = new mxCell("Lane 2",new mxGeometry(160,30,160,530),"swimlane;html=1;startSize=30;");
       lineCell.vertex = !0;
       poolCell.insert(lineCell);
-      lineCell = new mxCell("Lane 3",new mxGeometry(320,30,160,530),"swimlane;html=1;startSize=30;strokeColor=#555555;");
+      lineCell = new mxCell("Lane 3",new mxGeometry(320,30,160,530),"swimlane;html=1;startSize=30;");
       lineCell.vertex = !0;
       poolCell.insert(lineCell);
       return sb.createVertexTemplateFromCells([poolCell], poolCell.geometry.width, poolCell.geometry.height, "Vertical Pool 1", !0);
