@@ -3227,6 +3227,14 @@ EditorUi.prototype.save = function(name)
 };
 
 /**
+ * Get the current graph xml string
+ */
+EditorUi.prototype.getGraphXml = function()
+{
+  return mxUtils.getXml(this.editor.getGraphXml());
+}
+
+/**
  * Executes the given layout.
  */
 EditorUi.prototype.executeLayout = function(exec, animate, post)
