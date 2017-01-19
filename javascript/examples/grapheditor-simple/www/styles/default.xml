@@ -21,6 +21,7 @@
 		<add as="rounded" value="1"/>
 		<add as="strokeColor" value="#555555"/>
 		<add as="fontColor" value="#000000"/>
+    <add as="curved" value="1"/>
 	</add>
 	<add as="text">
 		<add as="fillColor" value="none"/>
